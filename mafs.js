@@ -218,22 +218,23 @@ class Mafs {
   }
 
   static #normalize(digits, decimals) {
-    const negativeSign = (digits.toString()[0] === '-' ? '-' : '');
-    digits = (negativeSign === '-' ? digits.toString().slice(1) : digits.toString());
+    const sign = (digits.toString()[0] === '-' ? '-' : '');
+    digits = (sign === '-' ? digits.toString().slice(1) : digits.toString());
     const digitsLength = digits.length - (digits[0] === '-' ? 1 : 0);
 
     if (decimals === 0 || decimals === undefined) {
-      return negativeSign + digits;
+      return sign + digits;
     } else if (digitsLength > decimals) {
-      return negativeSign + digits.slice(0, digits.length - decimals) + '.' + digits.slice(digits.length - decimals);
+      return sign + digits.slice(0, digits.length - decimals) + '.' + digits.slice(digits.length - decimals);
     } else {
-      return negativeSign + '0.' + '0'.repeat(decimals - digitsLength) + digits;
+      return sign + '0.' + '0'.repeat(decimals - digitsLength) + digits;
     }
   }
 
   static #trimZeroes = str => {
     const dotIndex = str.indexOf('.');
-    str = str.replace(/^0+/g, '');
+    const sign = (str[0] === '-' ? '-' : '');
+    str = str.replace('-', '').replace(/^0+/g, '');
 
     if (str.indexOf('.') !== -1) {
       str = str.replace(/0+$/g, '');
@@ -242,19 +243,40 @@ class Mafs {
       if (str.at(0) === '.') str = '0' + str;
     }
 
-    return str === '' ? '0' : str;
+    const [mantissa, decimal] = str.split('.');
+
+    if (mantissa === '' && decimal !== undefined) {
+      str = '0.' + decimal;
+    }
+
+    return str === '' ? '0' : sign + str;
+  }
+
+  static #insertString = (str, pos, insert) => {
+    return str.slice(0, pos) + insert + str.slice(pos);
   }
 
   static #deScientify = str => {
-    const split = str.split('e');
-    const decimalFactor = (
-      split[1][0] === '-'
-        ? '0.' + '0'.repeat(+split[1].slice(1) - 1) + '1'
-        : '1' + '0'.repeat(+split[1])
-    )
+    const [mantissa, exponent] = str.split('e');
+    const [int, decimal] = mantissa.split('.');
+    const decimalIndex = mantissa.indexOf('.');
+    const noDecimalPointNumber = (decimal === undefined ? int : int + decimal);
+    const decimalLength = (decimal === undefined ? 0 : decimal.length);
+    let result;
 
-    return Mafs.number(split[0]).multiply(decimalFactor).value;
+    if (decimal !== undefined && decimalLength <= +exponent) {
+      result = noDecimalPointNumber + '0'.repeat(+exponent - decimalLength);
+    } else if (+exponent > 0 || int.length > -Number(exponent)) {
+      result = Mafs.#insertString(noDecimalPointNumber, decimalIndex + +exponent, '.');
+    } else {
+      result = '0.' + '0'.repeat(-Number(exponent) - int.length) + noDecimalPointNumber.replace('-', '');
+
+      if (+int < 0) {
+        result = '-' + result;
+      }
+    }
+
+    return Mafs.#trimZeroes(result);
   }
 }
 
-export default Mafs;
