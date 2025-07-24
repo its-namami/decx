@@ -9,7 +9,7 @@
 A custom-built JavaScript math engine focused on precision, clarity, and full control.
 No dependencies. No borrowed logic. Just pure vanilla JS, crafted from scratch.
 
-## 🚀 Features
+## Features
 
 - Arbitrary-precision number handling (BigInt-friendly)
 - Core arithmetic: addition, subtraction, multiplication, division
@@ -17,23 +17,17 @@ No dependencies. No borrowed logic. Just pure vanilla JS, crafted from scratch.
 - Planned: logarithms, exponentiation, trigonometry, parsing, memory stack
 - Eventually: graphical *extension* (plotting via canvas)
 
-## 💡 Philosophy
+## Philosophy
 
 Mafs is not meant to be a competitor to Decimal.js or Math.js.
 It’s an **exercise in reinventing the wheel** — fully self-developed, no lookups, no libraries.
 Every feature is designed, debugged, and refined from scratch as a personal learning journey.
 
-## 🧠 Why?
+## Why?
 
 I started this project as part of [The Odin Project](https://www.theodinproject.com/), but it grew beyond a simple calculator.
 This is a math engine and it's teaching me how math, precision, and JavaScript really work under the hood.
 Every feature is born from the challenge of solving it unaided — this project is less about speed and more about understanding the why behind every result.
-
-## 📦 Cloning the project
-
-This project isn't meant for production yet, but feel free to clone it:
-
-If you’d like to experiment or contribute, cloning is the way to go. No build steps required.
 
 ```zsh
 git clone https://github.com/its-namami/mafs-js.git
