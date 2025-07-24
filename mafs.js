@@ -1,4 +1,4 @@
-class Mafs {
+export default class Mafs {
   #isNegative;
   #absDigits;
   #decimalLength;
@@ -279,4 +279,3 @@ class Mafs {
     return Mafs.#trimZeroes(result);
   }
 }
-

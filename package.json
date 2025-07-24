@@ -1,0 +1,33 @@
+{
+  "name": "mafs.js",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A math engine built in vanilla JS — zero dependencies, pure brainpower.",
+  "main": "mafs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/its-namami/mafs-js.git"
+  },
+  "keywords": [
+    "math",
+    "math-engine",
+    "math-library",
+    "javascript",
+    "js",
+    "no-dependencies",
+    "educational"
+  ],
+  "files": [
+    "mafs.js",
+    "README.md"
+  ],
+  "author": "its-namami",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/its-namami/mafs-js/issues"
+  },
+  "homepage": "https://github.com/its-namami/mafs-js#readme"
+}
