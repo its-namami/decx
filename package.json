@@ -1,15 +1,15 @@
 {
-  "name": "mafs.js",
+  "name": "decx",
   "version": "0.1.0",
   "type": "module",
   "description": "A math engine built in vanilla JS — zero dependencies, pure brainpower.",
-  "main": "mafs.js",
+  "main": "decx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/its-namami/mafs-js.git"
+    "url": "git+https://github.com/its-namami/decx.git"
   },
   "keywords": [
     "math",
@@ -21,13 +21,13 @@
     "educational"
   ],
   "files": [
-    "mafs.js",
+    "decx",
     "README.md"
   ],
   "author": "its-namami",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/its-namami/mafs-js/issues"
+    "url": "https://github.com/its-namami/decx/issues"
   },
-  "homepage": "https://github.com/its-namami/mafs-js#readme"
+  "homepage": "https://github.com/its-namami/decx#readme"
 }

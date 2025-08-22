@@ -1,10 +1,10 @@
-![GitHub repo size](https://img.shields.io/github/repo-size/its-namami/mafs-js) ![GitHub License](https://img.shields.io/github/license/its-namami/mafs-js) ![GitHub Issues](https://img.shields.io/github/issues/its-namami/mafs-js)
+![GitHub repo size](https://img.shields.io/github/repo-size/its-namami/decx) ![GitHub License](https://img.shields.io/github/license/its-namami/decx) ![GitHub Issues](https://img.shields.io/github/issues/its-namami/decx)
 
 <p align="left">
-  <img src='https://raw.githubusercontent.com/its-namami/mafs-js/main/assets/media/images/docs/mafs-js-logo.webp' alt='Mafs.js Logo' width='200'/>
+  <img src='https://raw.githubusercontent.com/its-namami/decx/main/assets/media/images/docs/decx-logo.webp' alt='DecX Logo' width='200'/>
 </p>
 
-# Mafs.js
+# DecX
 
 A custom-built JavaScript math engine focused on precision, clarity, and full control.
 No dependencies. No borrowed logic. Just pure vanilla JS, crafted from scratch.
@@ -19,9 +19,13 @@ No dependencies. No borrowed logic. Just pure vanilla JS, crafted from scratch.
 
 ## Philosophy
 
-Mafs is not meant to be a competitor to Decimal.js or Math.js.
+DecX is not meant to be a competitor to Decimal.js or Math.js.
 It’s an **exercise in reinventing the wheel** — fully self-developed, no lookups, no libraries.
 Every feature is designed, debugged, and refined from scratch as a personal learning journey.
+
+## The name
+
+DecX is Decimal Class for standard base 10 numbers (from 0 to 9), that's why the roman 10 "X" at the end.
 
 ## Why?
 
@@ -29,17 +33,13 @@ I started this project as part of [The Odin Project](https://www.theodinproject.
 This is a math engine and it's teaching me how math, precision, and JavaScript really work under the hood.
 Every feature is born from the challenge of solving it unaided — this project is less about speed and more about understanding the why behind every result.
 
-```zsh
-git clone https://github.com/its-namami/mafs-js.git
-```
-
 ## Method Input Expectations:
 
-### Mafs.number(input):
+### DecX.number(input):
 
 - Accepts string or number.
 
-### Mafs.multiply(input):
+### DecX.multiply(input):
 
 - string (recommended): Expected format for precise calculations.
 
@@ -47,43 +47,42 @@ git clone https://github.com/its-namami/mafs-js.git
 
 - bigint: Supported, but the .value getter will return a string in decimal form when needed (e.g., for non-integer results).
 
-### Mafs.number(x).sqrt():
+### DecX.number(x).sqrt():
 
 - Does not expect any input parameters.
 
 ## Example Usage
 
-To create a new instance of the `Mafs` class, use the static `Mafs.number()` method.
-- **Please refrain from using `new Mafs()` directly**, as it may not handle certain edge cases correctly.
+To create a new instance of the `DecX` class, use the static `DecX.number()` method.
 
-The `Mafs.number()` method accepts a number, a bigint or a string representing a number.
-- **Please refrain from inputting number type**: Mafs.number(3.14) → leads to warning (and subtle bugs).
+The `DecX.number()` method accepts a number, a bigint or a string representing a number.
+- **Please refrain from inputting number type**: DecX.number(3.14) → leads to warning (and subtle bugs) or may use octal or whatever representation.
 
 ```js
-import Mafs from './path/to/mafs.js';
+import DecX from './path/to/decx.js';
 
-// Create a Mafs number from a string
-const num1 = Mafs.number('-1.23');
+// Create a DecX number from a string
+const num1 = DecX.number('-1.23');
 
 // Example: Division
 const num2 = '3.501';
 const result = num1.divide(num2).value; // returns '-0.351328191945158'
 
 // Don't do this: Multiplication with a warning about number-type input
-Mafs.number('2.25').multiply(0.000001).value; // Warning: Prefer string input for precision, returns '0.00000225'
+DecX.number('2.25').multiply(0.000001).value; // Warning: Prefer string input for precision, returns '0.00000225'
 
 // Example: Addition with high precision
-const preciseSum = Mafs.number('0.000000000000000000000000000000001')
-  .add(Mafs.number('0.000000000000000000000000000000002'))
+const preciseSum = DecX.number('0.000000000000000000000000000000001')
+  .add(DecX.number('0.000000000000000000000000000000002'))
   .value; // Returns '0.000000000000000000000000000000003'
 ```
 
 ## Roadmap
-For more detailed progress and future plans, see the [Mafs.js Project Board](https://github.com/users/its-namami/projects/3) or explore the [issues](https://github.com/its-namami/mafs-js/issues)
+For more detailed progress and future plans, see the [DecX Project Board](https://github.com/users/its-namami/projects/3) or explore the [issues](https://github.com/its-namami/decx/issues)
 
 ### Math Engine Core
 
-- [x] Mafs Class
+- [x] DecX Class
 
 - [x] Addition, Subtraction, etc.
 
