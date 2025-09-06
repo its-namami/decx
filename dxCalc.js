@@ -1,4 +1,4 @@
-export default class DecX {
+export default class DXCalc {
   #_isNegative;
   #_digits;
   #_integer = {};
@@ -7,9 +7,9 @@ export default class DecX {
   static #_token;
 
   constructor(number, token = undefined) {
-    if (token !== DecX.#_token) DecX.#callError('newDecXCalled');
+    if (token !== DXCalc.#_token) DXCalc.#callError('newDXCalcCalled');
 
-    const numberString = DecX.#normalize(number);
+    const numberString = DXCalc.#normalize(number);
 
     this.#decomposeNumber(numberString);
   }
@@ -27,7 +27,7 @@ export default class DecX {
   }
 
   get sciNum() {
-    return DecX.#enScientify(this.value);
+    return DXCalc.#enScientify(this.value);
   }
 
   get decimal() {
@@ -35,22 +35,22 @@ export default class DecX {
   }
 
   get value() {
-    return DecX.#formatToDecimal(this.#_digits.toString(), this.#_decimal?.length);
+    return DXCalc.#formatToDecimal(this.#_digits.toString(), this.#_decimal?.length);
   }
 
   add(secondNumber) {
-    if (secondNumber instanceof DecX === false) secondNumber = DecX.number(secondNumber);
+    if (secondNumber instanceof DXCalc === false) secondNumber = DXCalc.number(secondNumber);
 
     const maxDecimalLength = Math.max(this.#_decimal?.length ?? 0, secondNumber.#_decimal?.length ?? 0);
     const firstNumberValue = this.#rescaleDecimal(maxDecimalLength);
     const secondNumberValue = secondNumber.#rescaleDecimal(maxDecimalLength);
     const numberResult = firstNumberValue + secondNumberValue;
 
-    return DecX.number(DecX.#formatToDecimal(numberResult, maxDecimalLength));
+    return DXCalc.number(DXCalc.#formatToDecimal(numberResult, maxDecimalLength));
   }
 
   subtract(secondNumber) {
-    if (secondNumber instanceof DecX === false) secondNumber = DecX.number(secondNumber);
+    if (secondNumber instanceof DXCalc === false) secondNumber = DXCalc.number(secondNumber);
 
     secondNumber.#_digits *= -1n; // invert sign
     secondNumber.#_isNegative ^= true; // toggle true | false
@@ -59,24 +59,24 @@ export default class DecX {
   }
 
   multiply(secondNumber) {
-    if (secondNumber instanceof DecX === false) secondNumber = DecX.number(secondNumber);
+    if (secondNumber instanceof DXCalc === false) secondNumber = DXCalc.number(secondNumber);
 
     const sumLength = (this.#_decimal?.length ?? 0) + (secondNumber.#_decimal?.length ?? 0);
     const numberResult = this.#_digits * secondNumber.#_digits;
 
-    return DecX.number(DecX.#formatToDecimal(numberResult, sumLength));
+    return DXCalc.number(DXCalc.#formatToDecimal(numberResult, sumLength));
   }
 
   divide(secondNumber) {
-    if (secondNumber instanceof DecX === false) secondNumber = DecX.number(secondNumber);
+    if (secondNumber instanceof DXCalc === false) secondNumber = DXCalc.number(secondNumber);
     const maxDecimalLength = Math.max(this.#_decimal?.length ?? 0, secondNumber.#_decimal?.length ?? 0);
     const divident = this.#rescaleDecimal(maxDecimalLength);
     const divisor = secondNumber.#rescaleDecimal(maxDecimalLength);
 
-    if (divisor === 0n) return DecX.#callError('divideZero');
+    if (divisor === 0n) return DXCalc.#callError('divideZero');
 
     const adjustDividentForDivision = (divident, divisor, iterations = 0) => {
-      if (iterations <= DecX.#_scale && divident % divisor !== 0n) {
+      if (iterations <= DXCalc.#_scale && divident % divisor !== 0n) {
         const newDivident = divident * 10n;
         iterations++; // THIS DOESN'T WORK
         return adjustDividentForDivision(newDivident, divisor, iterations);
@@ -85,60 +85,60 @@ export default class DecX {
       }
     }
 
-    DecX.#_scale++;
+    DXCalc.#_scale++;
     const [adjustedDivident, addedDecimals] = adjustDividentForDivision(divident, divisor);
-    DecX.#_scale--;
+    DXCalc.#_scale--;
     const quotient = (adjustedDivident / divisor).toString();
-    const formattedQuotient = DecX.#formatToDecimal(quotient, addedDecimals);
-    const DecXResult = DecX.number(formattedQuotient);
+    const formattedQuotient = DXCalc.#formatToDecimal(quotient, addedDecimals);
+    const DXCalcResult = DXCalc.number(formattedQuotient);
 
-    return DecXResult;
+    return DXCalcResult;
   }
 
   sqrt() {
-    if (this.#_isNegative) DecX.#callError('negativeForbidden', this.value);
-    const sqrt = DecX.#newtonsMethodSqrt(this);
+    if (this.#_isNegative) DXCalc.#callError('negativeForbidden', this.value);
+    const sqrt = DXCalc.#newtonsMethodSqrt(this);
 
-    return DecX.number(sqrt.value.slice(0, DecX.#_scale + 1 + sqrt.#_integer.length));
+    return DXCalc.number(sqrt.value.slice(0, DXCalc.#_scale + 1 + sqrt.#_integer.length));
   }
 
   static get scale() {
-    return DecX.#_scale;
+    return DXCalc.#_scale;
   }
 
   static number(input) {
-    const validatedInput = DecX.#validate(input);
+    const validatedInput = DXCalc.#validate(input);
 
-    return new DecX(validatedInput, DecX.#_token);
+    return new DXCalc(validatedInput, DXCalc.#_token);
   }
 
   static {
-    DecX.#_scale = 9;
-    DecX.#_token = Symbol('unique identifier');
+    DXCalc.#_scale = 9;
+    DXCalc.#_token = Symbol('unique identifier');
     // aliases
-    DecX.from = DecX.number;
-    DecX.prototype.times = DecX.prototype.multiply;
-    DecX.prototype.plus = DecX.prototype.add;
-    DecX.prototype.minus = DecX.prototype.subtract;
-    DecX.prototype.div = DecX.prototype.divide;
+    DXCalc.from = DXCalc.number;
+    DXCalc.prototype.times = DXCalc.prototype.multiply;
+    DXCalc.prototype.plus = DXCalc.prototype.add;
+    DXCalc.prototype.minus = DXCalc.prototype.subtract;
+    DXCalc.prototype.div = DXCalc.prototype.divide;
   }
 
   static setScale = scale => {
     if (typeof scale === 'number') {
-      DecX.#validate(scale, 'scale');
+      DXCalc.#validate(scale, 'scale');
 
-      if (scale > 0) DecX.#_scale = scale;
-      else DecX.#callError('numNeedMoreThanZero');
+      if (scale > 0) DXCalc.#_scale = scale;
+      else DXCalc.#callError('numNeedMoreThanZero');
     } else {
-      DecX.#callError('unsupportedType', scale);
+      DXCalc.#callError('unsupportedType', scale);
     }
 
-    return DecX;
+    return DXCalc;
   }
 
   static longScale() {
-    DecX.setScale(20);
-    return DecX;
+    DXCalc.setScale(20);
+    return DXCalc;
   }
 
   #rescaleDecimal(scale) {
@@ -154,14 +154,14 @@ export default class DecX {
       case 'string':
         break;
       case 'number':
-        if (mode !== 'scale') DecX.#warning('inputNumber');
+        if (mode !== 'scale') DXCalc.#warning('inputNumber');
         number = number.toString();
         break;
       case 'bigint':
         number = number.toString();
         break;
       default:
-        return DecX.#callError('unsupportedType', number);
+        return DXCalc.#callError('unsupportedType', number);
     }
 
     number = number.trim();
@@ -172,7 +172,7 @@ export default class DecX {
       : /^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$/
     );
 
-    if (!validNumberRegex.test(number)) return DecX.#callError('badNum', number);
+    if (!validNumberRegex.test(number)) return DXCalc.#callError('badNum', number);
 
     switch (mode) {
       case 'default':
@@ -180,7 +180,7 @@ export default class DecX {
       case 'scale':
         return +number;
       default:
-        DecX.#callError('unsupportedValidateMode');
+        DXCalc.#callError('unsupportedValidateMode');
     }
   }
 
@@ -188,8 +188,8 @@ export default class DecX {
     switch (error) {
       case 'numNeedMoreThanZero':
         throw new Error('\nThe number ${info} is invalid!\nMust be more than zero');
-      case 'newDecXCalled':
-        throw new Error('\nDecX constructor cannot be called directly.\nUse DecX.number() instead.');
+      case 'newDXCalcCalled':
+        throw new Error('\nDXCalc constructor cannot be called directly.\nUse DXCalc.number() instead.');
       case 'unsupportedValidateMode':
         throw new Error (`\nUnsupported validate mode <${info}>!\nPlease refer to the documentation.`);
       case 'unsupportedType':
@@ -225,11 +225,11 @@ export default class DecX {
     const numberString = number.toString();
     const descientifiedNumber = (
       numberString.includes('e') || numberString.includes('E')
-        ? DecX.#deScientify(numberString)
+        ? DXCalc.#deScientify(numberString)
         : numberString
     );
-    const scaledNumber = DecX.#trimNumberToScale(descientifiedNumber);
-    const trimmedNumber = DecX.#trimZeroes(scaledNumber);
+    const scaledNumber = DXCalc.#trimNumberToScale(descientifiedNumber);
+    const trimmedNumber = DXCalc.#trimZeroes(scaledNumber);
 
     return trimmedNumber;
   }
@@ -256,7 +256,7 @@ export default class DecX {
 
     const result = getResult();
 
-    return DecX.#trimZeroes(result);
+    return DXCalc.#trimZeroes(result);
   }
 
   static #trimZeroes = numberString => {
@@ -287,20 +287,20 @@ export default class DecX {
     const exponentValue = +(negativeExponent ? exponent.slice(1) : exponent);
 
     if (negativeExponent) {
-      return DecX.#formatToDecimal(integer + (decimal ?? ''), exponentValue + (decimal?.length ?? 0));
+      return DXCalc.#formatToDecimal(integer + (decimal ?? ''), exponentValue + (decimal?.length ?? 0));
     } else {
-      return DecX.#formatToDecimal(integer + (decimal ?? ''), (decimal?.length ?? 0) - exponentValue);
+      return DXCalc.#formatToDecimal(integer + (decimal ?? ''), (decimal?.length ?? 0) - exponentValue);
     }
   }
 
   static #enScientify(stringNumber) {
-    const validatedNumber = DecX.#validate(stringNumber);
-    const realStringNumber = DecX.#trimZeroes(stringNumber);
+    const validatedNumber = DXCalc.#validate(stringNumber);
+    const realStringNumber = DXCalc.#trimZeroes(stringNumber);
 
     const getDescientifiedNumber = () => {
       if (validatedNumber.includes('e')
           || validatedNumber.includes('E')) {
-        return DecX.#deScientify(realStringNumber);
+        return DXCalc.#deScientify(realStringNumber);
       } else {
         return realStringNumber;
       }
@@ -309,7 +309,7 @@ export default class DecX {
     const descientifiedNumber = getDescientifiedNumber();
     const [integer, decimal = ''] = descientifiedNumber.split('.');
     const sign = integer[0] === '-' ? '-' : '';
-    const pureDigits = DecX.#trimZeroes((integer + decimal).slice(sign.length));
+    const pureDigits = DXCalc.#trimZeroes((integer + decimal).slice(sign.length));
 
     const calculateMantissa = () => {
       const mantissaHasDecimal = pureDigits.length > 1;
@@ -345,7 +345,7 @@ export default class DecX {
   }
 
   static #roundLastDecimal(str) {
-    const validatedString = DecX.#validate(str);
+    const validatedString = DXCalc.#validate(str);
     const sign = validatedString[0] === '-' ? '-' : '';
     let absoluteDigits = BigInt(validatedString.replace(/^-|\./g, ''));
     const decimalLength = validatedString.split('.')[1]?.length ?? 0;
@@ -355,24 +355,24 @@ export default class DecX {
     absoluteDigits -= absoluteDigits % 10n;
     absoluteDigits /= 10n;
 
-    return DecX.#formatToDecimal(sign + absoluteDigits.toString(), Math.min(DecX.#_scale, decimalLength));
+    return DXCalc.#formatToDecimal(sign + absoluteDigits.toString(), Math.min(DXCalc.#_scale, decimalLength));
   }
 
   static #trimNumberToScale(str) {
-    const validatedString = DecX.#validate(str);
+    const validatedString = DXCalc.#validate(str);
     let [integer, decimal] = validatedString.split('.');
     const sign = validatedString[0] === '-' ? '-' : '';
 
-    if (decimal === undefined || decimal.length <= DecX.#_scale) return validatedString;
+    if (decimal === undefined || decimal.length <= DXCalc.#_scale) return validatedString;
 
-    decimal = decimal.slice(0, DecX.#_scale + 1);
-    return DecX.#roundLastDecimal(integer + '.' + decimal);
+    decimal = decimal.slice(0, DXCalc.#_scale + 1);
+    return DXCalc.#roundLastDecimal(integer + '.' + decimal);
   }
 
   static #newtonsMethodSqrt(number) {
     if (number.#_digits === 0n) return number;
     // temporary increase for precision
-    DecX.#_scale++;
+    DXCalc.#_scale++;
     // safeguard
     const maxIterations = 100;
 
@@ -380,7 +380,7 @@ export default class DecX {
     const newGuess = currentGuess => currentGuess.add(number.divide(currentGuess)).divide('2');
 
     // initial guess for newtons method
-    let currentGuess = DecX.number('1');
+    let currentGuess = DXCalc.number('1');
 
     for (let i = 0; i < maxIterations; i++) {
       const nextGuess = newGuess(currentGuess);
@@ -392,10 +392,10 @@ export default class DecX {
       else currentGuess = newGuess(currentGuess);
     }
 
-    DecX.#_scale--;
+    DXCalc.#_scale--;
 
     // automatically scales the decimal of guess down
-    currentGuess = DecX.number(currentGuess.value);
+    currentGuess = DXCalc.number(currentGuess.value);
 
     return currentGuess;
   }
