@@ -25,7 +25,7 @@ Every feature is designed, debugged, and refined from scratch as a personal lear
 
 ## The name
 
-DXCalc is Decimal Class for standard base 10 numbers (from 0 to 9), that's why the roman 10 "X" at the end.
+DXCalc is Decimal Class for standard base 10 numbers (from 0 to 9), that's why the roman 10 "X" in the name.
 
 ## Why?
 

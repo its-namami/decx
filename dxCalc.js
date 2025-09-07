@@ -107,6 +107,11 @@ export default class DXCalc {
   }
 
   static number(input) {
+    if (input instanceof DXCalc) {
+      return input;
+    }
+
+
     const validatedInput = DXCalc.#validate(input);
 
     return new DXCalc(validatedInput, DXCalc.#_token);
