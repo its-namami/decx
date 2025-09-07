@@ -1,6 +1,6 @@
 {
   "name": "dx-calc",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "type": "module",
   "description": "A math engine built in vanilla JS — zero dependencies, pure brainpower.",
   "main": "dxCalc.js",
